@@ -32,6 +32,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,9 +41,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NoteAppTheme {
-                NoteOverviewHeader(
-                   5
-                )
+                Surface() {
+                    NoteOverview()
+                }
             }
         }
     }
@@ -61,12 +63,31 @@ fun NoteOverviewHeader(notes: Int, modifier: Modifier = Modifier) {
 
 @Composable
 fun NoteOverviewContent(modifier: Modifier = Modifier) {
-    Column () {
-        Row () {
+    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+        Row {
             NoteCard()
-            Spacer(modifier = Modifier.width(25.dp))
+            Spacer(modifier = Modifier.width(16.dp))
             NoteCard()
         }
+        Spacer(modifier = Modifier.height(16.dp))
+        Row {
+            NoteCard()
+            Spacer(modifier = Modifier.width(16.dp))
+            NoteCard()
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Row {
+            NoteCard()
+            Spacer(modifier = Modifier.width(16.dp))
+            NoteCard()
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Row {
+            NoteCard()
+            Spacer(modifier = Modifier.width(16.dp))
+            NoteCard()
+        }
+
     }
 }
 
@@ -109,7 +130,7 @@ fun NoteCard (modifier: Modifier = Modifier) {
         Text("NOTE TITLE", fontWeight = FontWeight(800))
         Surface(shadowElevation = 5.dp, modifier = Modifier
             .clip(RoundedCornerShape(2.dp))
-            .border(2.dp, Color.Black)) {
+            .border(2.dp, MaterialTheme.colorScheme.secondary)) {
             NoteCardContent()
         }
     }
