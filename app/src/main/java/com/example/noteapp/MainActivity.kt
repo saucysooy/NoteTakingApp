@@ -1,5 +1,6 @@
 package com.example.noteapp
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -23,6 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.noteapp.ui.theme.NoteAppTheme
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 
 
 class MainActivity : ComponentActivity() {
@@ -192,6 +195,63 @@ fun PairOfButtons(action: String, modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp)) {
             Text(text = action)
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditScreen(currentTitle: String, currentBody: String, modifier: Modifier = Modifier){
+    Scaffold (
+        topBar = {
+            TopAppBar(
+                title = {
+                    Box(modifier = Modifier.fillMaxWidth(0.95f)) {
+                        Text(text = "Editing Note", modifier = Modifier.align(Alignment.Center), textAlign = TextAlign.Center,fontWeight = FontWeight(800))
+                    }
+                },
+
+            )
+        }
+    ) { paddingValues ->
+        Column (horizontalAlignment = Alignment.CenterHorizontally) {
+            TextField(
+                singleLine = true,
+                value = currentTitle,
+                onValueChange = {},
+                placeholder = { Text(text = "Enter Title...") },
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
+                    .padding(paddingValues)
+            )
+            TextField(
+                modifier = Modifier
+                    .fillMaxHeight(0.6f)
+                    .fillMaxWidth(0.9f)
+                    .padding(top = 16.dp),
+                singleLine = false,
+                value = currentBody,
+                onValueChange = {},
+                placeholder = { Text(text = "Type your note here...") }
+            )
+            Spacer(modifier = Modifier.height(32.dp))
+            PairOfButtons("Save")
+        }
+    }
+}
+
+@Preview(
+    name = "Light Mode",
+    showBackground = true,
+)
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode",
+    showBackground = true,
+)
+@Composable
+fun EditScreenPreview() {
+    NoteAppTheme {
+        EditScreen("Placeholder Title", "Placeholder Body")
     }
 }
 
