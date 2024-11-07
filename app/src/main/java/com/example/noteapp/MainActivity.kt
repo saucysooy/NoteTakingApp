@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,12 +22,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -130,7 +134,9 @@ fun NoteCard (modifier: Modifier = Modifier) {
 fun CreateButton(onClick: () -> Unit) {
     Box (modifier = Modifier.fillMaxWidth()) {
         FloatingActionButton(
-            modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
             onClick = { onClick() },
         ) {
             Icon(Icons.Filled.Add, "Floating action button.")
@@ -158,13 +164,50 @@ fun NewNoteScreen(modifier: Modifier = Modifier){
             Spacer(modifier = Modifier.height(16.dp))
 
             TextField(
-                modifier = Modifier.fillMaxHeight(0.6f).fillMaxWidth(0.9f),
+                modifier = Modifier
+                    .fillMaxHeight(0.6f)
+                    .fillMaxWidth(0.9f),
                 singleLine = false,
                 value = "",
                 onValueChange = {},
                 placeholder = { Text(text = "Type your note here...") }
             )
+            Box (modifier = Modifier.fillMaxHeight(0.55f), contentAlignment = Alignment.BottomCenter) {
+                PairOfButtons("Create")
+            }
         }
+    }
+}
+
+@Composable
+fun PairOfButtons(action: String, modifier: Modifier = Modifier) {
+    Row (modifier = Modifier.fillMaxWidth()) {
+        Button (onClick = { /*TODO*/ }, modifier = Modifier
+            .weight(1f)
+            .padding(horizontal = 16.dp)) {
+            Text(text = "Cancel")
+        }
+        Button (onClick = { /*TODO*/ }, modifier = Modifier
+            .weight(1f)
+            .padding(horizontal = 16.dp)) {
+            Text(text = action)
+        }
+    }
+}
+
+@Preview(
+    name = "Light Mode",
+    showBackground = true,
+)
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    name = "Dark Mode",
+    showBackground = true,
+)
+@Composable
+fun PairOfButtonsPreview() {
+    NoteAppTheme {
+        PairOfButtons("Save")
     }
 }
 
