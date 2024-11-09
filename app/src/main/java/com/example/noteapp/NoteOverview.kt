@@ -44,19 +44,25 @@ fun NoteOverviewHeader(notes: Int, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun NoteOverviewContent(modifier: Modifier = Modifier) {
+fun NoteOverviewContent(notes: List<Note>,modifier: Modifier = Modifier) {
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        Row {
-            NoteCard()
-            Spacer(modifier = Modifier.width(16.dp))
-            NoteCard()
+        notes.chunked(2).forEach { rowNotes ->
+            Row {
+                rowNotes.forEach{ note ->
+                    NoteCard(note)
+
+                    if ( note != rowNotes.last()) { Spacer(modifier = Modifier.width(16.dp)) }
+                }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
         }
-        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
+/* ====================================== */
+
 @Composable
-fun NoteOverview(modifier: Modifier = Modifier) {
+fun NoteOverview(notes: List<Note> ,modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -64,27 +70,26 @@ fun NoteOverview(modifier: Modifier = Modifier) {
             .fillMaxHeight()
     ) {
         Box(modifier = Modifier.weight(1f)) {
-            NoteOverviewHeader(5)
+            NoteOverviewHeader(notes.size)
         }
         Box(modifier = Modifier.weight(2f)) {
-            NoteOverviewContent()
+            NoteOverviewContent(notes)
         }
         CreateButton(onClick = {})
     }
 
 }
 
+/* ====================================== */
+
 @Composable
-fun NoteCardContent(modifier: Modifier = Modifier) {
+fun NoteCardContent(note: Note , modifier: Modifier = Modifier) {
     Surface (modifier = Modifier
         .width(150.dp)
         .height(150.dp), color = Color(red = 0f, green = 0f, blue = 0f, alpha = 0.05f)
     ) {
         Box (contentAlignment = Alignment.Center, modifier = Modifier.padding(horizontal = 15.dp)) {
-            Text("SAMPLE CONTENT TEXT, " +
-                    "LAMBDA LOREM IPSUM LAMBDA LOREM IPSUM " +
-                    "LAMBDA LOREM IPSUM LAMBDA LOREM IPSUM " +
-                    "LAMBDA LOREM IPSUM LAMBDA LOREM IPSUM",
+            Text(note.noteBody,
                 maxLines = 5,
                 overflow = TextOverflow.Ellipsis)
         }
@@ -92,13 +97,13 @@ fun NoteCardContent(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun NoteCard (modifier: Modifier = Modifier) {
+fun NoteCard (note: Note,modifier: Modifier = Modifier) {
     Column (horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("NOTE TITLE", fontWeight = FontWeight(800))
+        Text(note.noteTitle, fontWeight = FontWeight(800))
         Surface(shadowElevation = 5.dp, modifier = Modifier
             .clip(RoundedCornerShape(2.dp))
             .border(2.dp, MaterialTheme.colorScheme.secondary)) {
-            NoteCardContent()
+            NoteCardContent(note)
         }
     }
 }

@@ -17,15 +17,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.noteapp.ui.theme.NoteAppTheme
 
+class Note (title: String, body: String) {
+    var noteTitle: String = title
+    var noteBody: String = body
+}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val notes = listOf<Note>();
             NoteAppTheme {
                 Surface() {
-                    NoteOverview()
+                    NoteOverview(notes)
                 }
             }
         }
@@ -126,8 +131,15 @@ fun CreateScreenPreview() {
 @Composable
 fun NoteOverviewPreview() {
     NoteAppTheme {
+        val previewNotes = listOf(
+            Note("Note 1", "This is the body of note 1."),
+            Note("Note 2", "This is the body of note 2."),
+            Note("Note 3", "This is the body of note 3."),
+            Note("Note 4", "This is the body of note 4."),
+            Note("Note 5", "This is the body of note 5."),
+        )
         Surface() {
-            NoteOverview()
+            NoteOverview(notes = previewNotes)
         }
     }
 }
