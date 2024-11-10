@@ -1,6 +1,8 @@
 package com.example.noteapp
 
+import android.widget.Toast
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun NoteOverviewHeader(notes: Int, modifier: Modifier = Modifier) {
@@ -44,12 +47,12 @@ fun NoteOverviewHeader(notes: Int, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun NoteOverviewContent(notes: List<Note>,modifier: Modifier = Modifier) {
+fun NoteOverviewContent(notes: List<Note>, navToDetail: (Int) -> Unit, modifier: Modifier = Modifier) {
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         notes.chunked(2).forEach { rowNotes ->
             Row {
                 rowNotes.forEach{ note ->
-                    NoteCard(note)
+                    NoteCard(note, navToDetail)
 
                     if ( note != rowNotes.last()) { Spacer(modifier = Modifier.width(16.dp)) }
                 }
@@ -62,20 +65,22 @@ fun NoteOverviewContent(notes: List<Note>,modifier: Modifier = Modifier) {
 /* ====================================== */
 
 @Composable
-fun NoteOverview(notes: List<Note> ,modifier: Modifier = Modifier) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-    ) {
-        Box(modifier = Modifier.weight(1f)) {
-            NoteOverviewHeader(notes.size)
+fun NoteOverview(notes: MutableList<Note>, navToDetail: (Int) -> Unit ,modifier: Modifier = Modifier) {
+    Surface() {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                NoteOverviewHeader(notes.size)
+            }
+            Box(modifier = Modifier.weight(2f)) {
+                NoteOverviewContent(notes, navToDetail)
+            }
+            CreateButton(onClick = {})
         }
-        Box(modifier = Modifier.weight(2f)) {
-            NoteOverviewContent(notes)
-        }
-        CreateButton(onClick = {})
     }
 
 }
@@ -97,12 +102,19 @@ fun NoteCardContent(note: Note , modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun NoteCard (note: Note,modifier: Modifier = Modifier) {
-    Column (horizontalAlignment = Alignment.CenterHorizontally) {
+fun NoteCard (note: Note, navToDetail: (Int) -> Unit, modifier: Modifier = Modifier) {
+    Column (
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable {
+            navToDetail(note.noteId)
+        }
+    ) {
         Text(note.noteTitle, fontWeight = FontWeight(800))
-        Surface(shadowElevation = 5.dp, modifier = Modifier
-            .clip(RoundedCornerShape(2.dp))
-            .border(2.dp, MaterialTheme.colorScheme.secondary)) {
+        Surface(
+            shadowElevation = 5.dp, modifier = Modifier
+                .clip(RoundedCornerShape(2.dp))
+                .border(2.dp, MaterialTheme.colorScheme.secondary)
+        ) {
             NoteCardContent(note)
         }
     }

@@ -46,7 +46,7 @@ fun NewNoteScreen(modifier: Modifier = Modifier){
                 placeholder = { Text(text = "Type your note here...") }
             )
             Box (modifier = Modifier.fillMaxHeight(0.55f), contentAlignment = Alignment.BottomCenter) {
-                PairOfButtons("Cancel", "Create")
+                PairOfButtons({},{} ,"Cancel", "Create")
             }
         }
     }

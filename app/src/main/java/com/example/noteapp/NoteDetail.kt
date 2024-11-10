@@ -22,7 +22,8 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NoteDetails(modifier: Modifier = Modifier) {
+fun NoteDetails(navToOverview: () -> Unit, noteId: Int, notes: MutableList<Note> ,modifier: Modifier = Modifier) {
+    val note = notes.find { it.noteId == noteId }
     Scaffold (
         topBar = {
             TopAppBar(
@@ -47,11 +48,11 @@ fun NoteDetails(modifier: Modifier = Modifier) {
     ){ paddingValues ->
         Box(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
             Column (modifier = Modifier.fillMaxWidth(0.9f).padding(start = 16.dp)) {
-                Text(text = "Note Title", fontWeight = FontWeight(800))
+                Text(text = note?.noteTitle ?: "", fontWeight = FontWeight(800))
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(text = "Note Body")
+                Text(text = note?.noteBody ?: "")
                 Spacer(modifier = Modifier.height(16.dp))
-                PairOfButtons("Back", "Edit")
+                PairOfButtons(navToOverview, navToOverview ,firstActionString = "Cancel", secondActionString = "Save")
             }
         }
     }

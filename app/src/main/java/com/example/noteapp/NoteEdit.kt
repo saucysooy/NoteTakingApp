@@ -55,7 +55,7 @@ fun EditScreen(currentTitle: String, currentBody: String, modifier: Modifier = M
                 placeholder = { Text(text = "Type your note here...") }
             )
             Spacer(modifier = Modifier.height(32.dp))
-            PairOfButtons("Cancel", "Save")
+            PairOfButtons({},{},"Cancel", "Save")
         }
     }
 }
