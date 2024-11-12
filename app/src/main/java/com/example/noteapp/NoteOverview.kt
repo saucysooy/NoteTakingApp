@@ -1,6 +1,5 @@
 package com.example.noteapp
 
-import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -32,7 +31,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun NoteOverviewHeader(notes: Int, modifier: Modifier = Modifier) {
@@ -47,9 +45,9 @@ fun NoteOverviewHeader(notes: Int, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun NoteOverviewContent(notes: List<Note>, navToDetail: (Int) -> Unit, modifier: Modifier = Modifier) {
+fun NoteOverviewContent(notesViewModel: NotesViewModel, navToDetail: (Int) -> Unit, modifier: Modifier = Modifier) {
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        notes.chunked(2).forEach { rowNotes ->
+        notesViewModel.notes.chunked(2).forEach { rowNotes ->
             Row {
                 rowNotes.forEach{ note ->
                     NoteCard(note, navToDetail)
@@ -65,7 +63,7 @@ fun NoteOverviewContent(notes: List<Note>, navToDetail: (Int) -> Unit, modifier:
 /* ====================================== */
 
 @Composable
-fun NoteOverview(notes: MutableList<Note>, navToDetail: (Int) -> Unit ,modifier: Modifier = Modifier) {
+fun NoteOverview(notesViewModel: NotesViewModel, navToDetail: (Int) -> Unit ,modifier: Modifier = Modifier) {
     Surface() {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -74,10 +72,10 @@ fun NoteOverview(notes: MutableList<Note>, navToDetail: (Int) -> Unit ,modifier:
                 .fillMaxHeight()
         ) {
             Box(modifier = Modifier.weight(1f)) {
-                NoteOverviewHeader(notes.size)
+                NoteOverviewHeader(notesViewModel.getNotesSize())
             }
             Box(modifier = Modifier.weight(2f)) {
-                NoteOverviewContent(notes, navToDetail)
+                NoteOverviewContent(notesViewModel, navToDetail)
             }
             CreateButton(onClick = {})
         }

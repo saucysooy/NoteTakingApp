@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NoteDetails(navToOverview: () -> Unit, noteId: Int, notes: MutableList<Note> ,modifier: Modifier = Modifier) {
-    val note = notes.find { it.noteId == noteId }
+fun NoteDetails(navToOverview: () -> Unit, noteId: Int, notesViewModel: NotesViewModel ,modifier: Modifier = Modifier) {
+    val note = notesViewModel.getNote(noteId)
     Scaffold (
         topBar = {
             TopAppBar(

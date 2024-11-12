@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,9 +13,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,49 +21,37 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.noteapp.ui.theme.NoteAppTheme
 
-data class Note (var noteTitle: String, var noteBody: String, val noteId: Int) {}
+data class Note (var noteTitle: String, var noteBody: String, val noteId: Int)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContent {
-            /*
-            val notes = remember { mutableListOf<Note>() }
-            val previewNotes = remember {
-                mutableStateListOf<Note>(
-                    Note("Note 1", "This is the body of note 1.",0),
-                    Note("Note 2", "This is the body of note 2.",1),
-                    Note("Note 3", "This is the body of note 3.",2),
-                    Note("Note 4", "This is the body of note 4.",3),
-                    Note("Note 5", "This is the body of note 5.",4)
-                )
-            }
 
-            notes.addAll(previewNotes)
-            */
-            val notes = mutableListOf(
-                Note("Note 1", "This is the first note.", 1),
-                Note("Note 2", "This is the second note.", 2),
-                Note("Note 3", "This is the third note.", 3)
-            )
+        val notesViewmodel by viewModels<NotesViewModel>()
+
+        setContent {
+            // Sample data
+            notesViewmodel.addNote(Note("Note 1", "This is the first note.", 1))
+            notesViewmodel.addNote(Note("Note 2", "This is the second note.", 2))
+            notesViewmodel.addNote(Note("Note 3", "This is the third note.", 3))
             NoteAppTheme {
                 val navController = rememberNavController()
-
+                // Setting up start screen with navigation
                 NavHost(navController = navController, startDestination = "overview") {
                     composable(
                         route = "overview"
                     ) {
-                        NoteOverview(notes , navToDetail = { noteId ->
+                        NoteOverview(notesViewmodel , navToDetail = { noteId -> // Takes an Int parameter and passes it to the lambda to then define the unique route
                             navController.navigate("details/$noteId")
                         })
                     }
-
+                    // Setting up detail screen for unique routes with navigation
                     composable (
                         route = "details/{noteId}"
-                    ) { backStackEntry ->
-                        val noteId = backStackEntry.arguments?.getString("noteId")?.toIntOrNull() ?: -1
-                        NoteDetails(navToOverview = { navController.navigate("overview")}, noteId = noteId, notes)
+                    ) { backStackEntry -> // The passed id of note is stored within the stack and sent along through route
+                        val noteId = backStackEntry.arguments?.getString("noteId")?.toIntOrNull() ?: -1 // Get the noteId from the route that was passed along
+                        NoteDetails(navToOverview = { navController.navigate("overview")}, noteId, notesViewmodel)
                     }
                 }
             }
@@ -103,7 +89,7 @@ fun PairOfButtons(firstAction: () -> Unit, secondAction: () -> Unit ,firstAction
 @Composable
 fun NoteDetailsPreview() {
     NoteAppTheme {
-        NoteDetails({},0, notes =  remember { mutableListOf<Note>() })
+        NoteDetails({},0, NotesViewModel())
     }
 }
 
@@ -167,17 +153,8 @@ fun CreateScreenPreview() {
 @Composable
 fun NoteOverviewPreview() {
     NoteAppTheme {
-        val previewNotes = remember {
-            mutableStateListOf<Note>(
-            Note("Note 1", "This is the body of note 1.",0),
-            Note("Note 2", "This is the body of note 2.",1),
-            Note("Note 3", "This is the body of note 3.",2),
-            Note("Note 4", "This is the body of note 4.",3),
-            Note("Note 5", "This is the body of note 5.",4)
-        )
-        }
-        Surface() {
-            NoteOverview(notes = previewNotes, {})
+        Surface {
+            NoteOverview(NotesViewModel(), navToDetail = {})
         }
     }
 }
