@@ -46,16 +46,24 @@ fun NoteOverviewHeader(notes: Int, modifier: Modifier = Modifier) {
 
 @Composable
 fun NoteOverviewContent(notesViewModel: NotesViewModel, navToDetail: (Int) -> Unit, modifier: Modifier = Modifier) {
-    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        notesViewModel.notes.chunked(2).forEach { rowNotes ->
-            Row {
-                rowNotes.forEach{ note ->
-                    NoteCard(note, navToDetail)
+    if (notesViewModel.getNotesSize() == 0) {
+        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+            Text(text = "No notes yet")
+        }
+    } else {
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+            notesViewModel.notes.chunked(2).forEach { rowNotes ->
+                Row {
+                    rowNotes.forEach { note ->
+                        NoteCard(note, navToDetail)
 
-                    if ( note != rowNotes.last()) { Spacer(modifier = Modifier.width(16.dp)) }
+                        if (note != rowNotes.last()) {
+                            Spacer(modifier = Modifier.width(16.dp))
+                        }
+                    }
                 }
+                Spacer(modifier = Modifier.height(16.dp))
             }
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
