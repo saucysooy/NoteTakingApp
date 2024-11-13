@@ -13,6 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -21,7 +25,10 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditScreen(currentTitle: String, currentBody: String, modifier: Modifier = Modifier){
+fun EditScreen(noteId: Int, notesViewModel: NotesViewModel, modifier: Modifier = Modifier){
+    val note = notesViewModel.getNote(noteId)
+    var noteTitle by remember { mutableStateOf(note?.noteTitle ?: "") }
+    var noteBody by remember { mutableStateOf(note?.noteBody ?: "") }
     Scaffold (
         topBar = {
             TopAppBar(
@@ -37,8 +44,11 @@ fun EditScreen(currentTitle: String, currentBody: String, modifier: Modifier = M
         Column (horizontalAlignment = Alignment.CenterHorizontally) {
             TextField(
                 singleLine = true,
-                value = currentTitle,
-                onValueChange = {},
+                value = noteTitle,
+                onValueChange = {
+                    noteTitle = it
+                    notesViewModel.updateNote(noteId, Note(noteTitle, noteBody, noteId))
+                },
                 placeholder = { Text(text = "Enter Title...") },
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
@@ -50,8 +60,11 @@ fun EditScreen(currentTitle: String, currentBody: String, modifier: Modifier = M
                     .fillMaxWidth(0.9f)
                     .padding(top = 16.dp),
                 singleLine = false,
-                value = currentBody,
-                onValueChange = {},
+                value = noteBody,
+                onValueChange = {
+                    noteBody = it
+                    notesViewModel.updateNote(noteId, Note(noteTitle, noteBody, noteId))
+                },
                 placeholder = { Text(text = "Type your note here...") }
             )
             Spacer(modifier = Modifier.height(32.dp))

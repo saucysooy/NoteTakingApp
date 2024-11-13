@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NoteDetails(navToOverview: () -> Unit, noteId: Int, notesViewModel: NotesViewModel ,modifier: Modifier = Modifier) {
+fun NoteDetails(navToOverview: () -> Unit, navToEdit: () -> Unit, noteId: Int, notesViewModel: NotesViewModel ,modifier: Modifier = Modifier) {
     val note = notesViewModel.getNote(noteId)
     Scaffold (
         topBar = {
@@ -52,7 +52,7 @@ fun NoteDetails(navToOverview: () -> Unit, noteId: Int, notesViewModel: NotesVie
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(text = note?.noteBody ?: "")
                 Spacer(modifier = Modifier.height(16.dp))
-                PairOfButtons(navToOverview, navToOverview ,firstActionString = "Cancel", secondActionString = "Save")
+                PairOfButtons(navToOverview, navToEdit ,firstActionString = "Cancel", secondActionString = "Edit")
             }
         }
     }

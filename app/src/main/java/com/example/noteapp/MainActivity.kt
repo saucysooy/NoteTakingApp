@@ -51,7 +51,17 @@ class MainActivity : ComponentActivity() {
                         route = "details/{noteId}"
                     ) { backStackEntry -> // The passed id of note is stored within the stack and sent along through route
                         val noteId = backStackEntry.arguments?.getString("noteId")?.toIntOrNull() ?: -1 // Get the noteId from the route that was passed along
-                        NoteDetails(navToOverview = { navController.navigate("overview")}, noteId, notesViewmodel)
+                        NoteDetails(navToOverview = { navController.navigate("overview")},
+                            navToEdit = { navController.navigate("edit/$noteId")},
+                            noteId,
+                            notesViewmodel)
+                    }
+
+                    composable (
+                        route = "edit/{noteId}"
+                    ) { backStackEntry ->
+                        val noteId = backStackEntry.arguments?.getString("noteId")?.toIntOrNull() ?: -1
+                        EditScreen(noteId, notesViewmodel)
                     }
                 }
             }
@@ -89,7 +99,7 @@ fun PairOfButtons(firstAction: () -> Unit, secondAction: () -> Unit ,firstAction
 @Composable
 fun NoteDetailsPreview() {
     NoteAppTheme {
-        NoteDetails({},0, NotesViewModel())
+        NoteDetails({}, {},0, NotesViewModel())
     }
 }
 
@@ -105,7 +115,7 @@ fun NoteDetailsPreview() {
 @Composable
 fun EditScreenPreview() {
     NoteAppTheme {
-        EditScreen("Placeholder Title", "Placeholder Body")
+        EditScreen(0, notesViewModel = NotesViewModel())
     }
 }
 

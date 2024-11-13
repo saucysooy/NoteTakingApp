@@ -17,4 +17,12 @@ class NotesViewModel : ViewModel() {
     fun getNotesSize(): Int {
         return notes.size
     }
+
+    fun updateNote(noteId: Int, newNote: Note) {
+        notes.forEach { note ->
+            if (note.noteId == noteId) {
+                notes[note.noteId] = newNote
+            }
+        }
+    }
 }
