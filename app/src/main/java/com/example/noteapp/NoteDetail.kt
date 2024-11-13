@@ -14,6 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -23,7 +24,7 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteDetails(navToOverview: () -> Unit, navToEdit: () -> Unit, noteId: Int, notesViewModel: NotesViewModel ,modifier: Modifier = Modifier) {
-    val note = notesViewModel.getNote(noteId)
+    val note = remember { notesViewModel.getNote(noteId) }
     Scaffold (
         topBar = {
             TopAppBar(

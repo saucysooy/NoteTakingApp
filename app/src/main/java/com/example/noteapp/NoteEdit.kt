@@ -25,10 +25,14 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditScreen(noteId: Int, notesViewModel: NotesViewModel, modifier: Modifier = Modifier){
+fun EditScreen(noteId: Int, notesViewModel: NotesViewModel, navToDetail: () -> Unit, modifier: Modifier = Modifier){
     val note = notesViewModel.getNote(noteId)
     var noteTitle by remember { mutableStateOf(note?.noteTitle ?: "") }
     var noteBody by remember { mutableStateOf(note?.noteBody ?: "") }
+
+    val originalNoteTitle = note?.noteTitle ?: ""
+    val originalNoteBody = note?.noteBody ?: ""
+
     Scaffold (
         topBar = {
             TopAppBar(
@@ -68,7 +72,21 @@ fun EditScreen(noteId: Int, notesViewModel: NotesViewModel, modifier: Modifier =
                 placeholder = { Text(text = "Type your note here...") }
             )
             Spacer(modifier = Modifier.height(32.dp))
-            PairOfButtons({},{},"Cancel", "Save")
+            PairOfButtons(
+                {
+                    // Reset the values to the original ones
+                    noteTitle = originalNoteTitle
+                    noteBody = originalNoteBody
+                    notesViewModel.updateNote(noteId, Note(originalNoteTitle, originalNoteBody, noteId))
+                    navToDetail()
+                },
+                {
+                    notesViewModel.updateNote(noteId, Note(noteTitle, noteBody, noteId)) // Make sure the new values are saved
+                    navToDetail()
+                },
+                "Cancel",
+                "Save"
+            )
         }
     }
 }

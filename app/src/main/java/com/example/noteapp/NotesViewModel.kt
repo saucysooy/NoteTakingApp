@@ -19,10 +19,9 @@ class NotesViewModel : ViewModel() {
     }
 
     fun updateNote(noteId: Int, newNote: Note) {
-        notes.forEach { note ->
-            if (note.noteId == noteId) {
-                notes[note.noteId] = newNote
-            }
+        val index = notes.indexOfFirst { it.noteId == noteId }
+        if (index >= 0) {
+            notes[index] = newNote
         }
     }
 }
