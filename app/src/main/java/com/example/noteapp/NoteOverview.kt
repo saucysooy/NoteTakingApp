@@ -63,7 +63,7 @@ fun NoteOverviewContent(notesViewModel: NotesViewModel, navToDetail: (Int) -> Un
 /* ====================================== */
 
 @Composable
-fun NoteOverview(notesViewModel: NotesViewModel, navToDetail: (Int) -> Unit ,modifier: Modifier = Modifier) {
+fun NoteOverview(notesViewModel: NotesViewModel, navToDetail: (Int) -> Unit, navToCreate: () -> Unit ,modifier: Modifier = Modifier) {
     Surface() {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -77,7 +77,7 @@ fun NoteOverview(notesViewModel: NotesViewModel, navToDetail: (Int) -> Unit ,mod
             Box(modifier = Modifier.weight(2f)) {
                 NoteOverviewContent(notesViewModel, navToDetail)
             }
-            CreateButton(onClick = {})
+            CreateButton(onClick = {navToCreate()})
         }
     }
 

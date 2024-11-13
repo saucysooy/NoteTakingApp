@@ -32,9 +32,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             // Sample data
-            notesViewmodel.addNote(Note("Note 1", "This is the first note.", 1))
-            notesViewmodel.addNote(Note("Note 2", "This is the second note.", 2))
-            notesViewmodel.addNote(Note("Note 3", "This is the third note.", 3))
+            notesViewmodel.addNote("Note 1", "This is the first note.")
+            notesViewmodel.addNote("Note 2", "This is the second note.")
+            notesViewmodel.addNote("Note 3", "This is the third note.")
             NoteAppTheme {
                 val navController = rememberNavController()
                 // Setting up start screen with navigation
@@ -42,9 +42,14 @@ class MainActivity : ComponentActivity() {
                     composable(
                         route = "overview"
                     ) {
-                        NoteOverview(notesViewmodel , navToDetail = { noteId -> // Takes an Int parameter and passes it to the lambda to then define the unique route
+                        NoteOverview(notesViewmodel ,
+                            navToDetail = { noteId -> // Takes an Int parameter and passes it to the lambda to then define the unique route
                             navController.navigate("details/$noteId")
-                        })
+                        },
+                            navToCreate = {
+                                navController.navigate("create")
+                            }
+                        )
                     }
                     // Setting up detail screen for unique routes with navigation
                     composable (
@@ -64,6 +69,12 @@ class MainActivity : ComponentActivity() {
                         EditScreen(noteId, notesViewmodel, navToDetail = {
                             navController.popBackStack()
                         })
+                    }
+
+                    composable(
+                        route = "create"
+                    ) {
+                        NewNoteScreen(notesViewmodel, navToOverview = { navController.popBackStack() })
                     }
                 }
             }
@@ -149,7 +160,7 @@ fun PairOfButtonsPreview() {
 @Composable
 fun CreateScreenPreview() {
     NoteAppTheme {
-        NewNoteScreen()
+        NewNoteScreen(notesViewModel = NotesViewModel(), navToOverview = {})
     }
 }
 
@@ -166,7 +177,7 @@ fun CreateScreenPreview() {
 fun NoteOverviewPreview() {
     NoteAppTheme {
         Surface {
-            NoteOverview(NotesViewModel(), navToDetail = {})
+            NoteOverview(NotesViewModel(), navToDetail = {}, navToCreate = {})
         }
     }
 }

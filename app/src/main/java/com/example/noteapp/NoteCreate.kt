@@ -11,6 +11,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -18,7 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun NewNoteScreen(modifier: Modifier = Modifier){
+fun NewNoteScreen(notesViewModel: NotesViewModel, navToOverview: () -> Unit,modifier: Modifier = Modifier){
+    var noteTitle = remember { mutableStateOf("") }
+    var noteBody = remember { mutableStateOf("") }
     Surface(modifier = Modifier.fillMaxSize(),) {
         Column (horizontalAlignment = Alignment.CenterHorizontally){
             Spacer(modifier = Modifier.height(16.dp))
@@ -29,8 +33,8 @@ fun NewNoteScreen(modifier: Modifier = Modifier){
 
             TextField(
                 singleLine = true,
-                value = "",
-                onValueChange = {},
+                value = noteTitle.value,
+                onValueChange = {noteTitle.value = it},
                 placeholder = { Text(text = "Enter Title...") }
             )
 
@@ -41,12 +45,18 @@ fun NewNoteScreen(modifier: Modifier = Modifier){
                     .fillMaxHeight(0.6f)
                     .fillMaxWidth(0.9f),
                 singleLine = false,
-                value = "",
-                onValueChange = {},
+                value = noteBody.value,
+                onValueChange = {noteBody.value = it},
                 placeholder = { Text(text = "Type your note here...") }
             )
             Box (modifier = Modifier.fillMaxHeight(0.55f), contentAlignment = Alignment.BottomCenter) {
-                PairOfButtons({},{} ,"Cancel", "Create")
+                PairOfButtons({navToOverview()},
+                    {
+                        notesViewModel.addNote(noteTitle.value, noteBody.value)
+                        navToOverview()
+                    } ,
+                    "Cancel",
+                    "Create")
             }
         }
     }

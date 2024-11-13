@@ -6,8 +6,17 @@ import androidx.lifecycle.ViewModel
 class NotesViewModel : ViewModel() {
     val notes = mutableStateListOf<Note>()
 
-    fun addNote(note: Note) {
+    // Simple counter to assign unique IDs to notes since we are not dealing with databases
+    private var noteIdCounter = 1
+
+    fun addNote(noteTitle: String, noteBody: String) {
+        val note = Note(
+            noteTitle = noteTitle,
+            noteBody = noteBody,
+            noteId = noteIdCounter
+        )
         notes.add(note)
+        noteIdCounter++
     }
 
     fun getNote(noteId: Int): Note? {
