@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -32,6 +33,9 @@ fun EditScreen(noteId: Int, notesViewModel: NotesViewModel, navToDetail: () -> U
 
     val originalNoteTitle = note?.noteTitle ?: ""
     val originalNoteBody = note?.noteBody ?: ""
+
+    var titleError by remember { mutableStateOf<String?>(null) }
+    var bodyError by remember { mutableStateOf<String?>(null) }
 
     Scaffold (
         topBar = {
@@ -51,13 +55,18 @@ fun EditScreen(noteId: Int, notesViewModel: NotesViewModel, navToDetail: () -> U
                 value = noteTitle,
                 onValueChange = {
                     noteTitle = it
-                    notesViewModel.updateNote(noteId, Note(noteTitle, noteBody, noteId))
+                    titleError = null
                 },
                 placeholder = { Text(text = "Enter Title...") },
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
                     .padding(paddingValues)
             )
+            if (titleError != null) {
+                Text(text = titleError!!, color = Color.Red)
+            }
+
+
             TextField(
                 modifier = Modifier
                     .fillMaxHeight(0.6f)
@@ -67,10 +76,13 @@ fun EditScreen(noteId: Int, notesViewModel: NotesViewModel, navToDetail: () -> U
                 value = noteBody,
                 onValueChange = {
                     noteBody = it
-                    notesViewModel.updateNote(noteId, Note(noteTitle, noteBody, noteId))
+                    bodyError = null
                 },
                 placeholder = { Text(text = "Type your note here...") }
             )
+            if (bodyError != null) {
+                Text(text = bodyError!!, color = Color.Red)
+            }
             Spacer(modifier = Modifier.height(32.dp))
             PairOfButtons(
                 {
@@ -81,8 +93,23 @@ fun EditScreen(noteId: Int, notesViewModel: NotesViewModel, navToDetail: () -> U
                     navToDetail()
                 },
                 {
-                    notesViewModel.updateNote(noteId, Note(noteTitle, noteBody, noteId)) // Make sure the new values are saved
-                    navToDetail()
+                    val titleValid = noteTitle.isNotBlank() && noteTitle.length <= 25
+                    val bodyValid =  noteBody.length <= 200
+
+                    if (titleValid && bodyValid) {
+                        notesViewModel.updateNote(noteId, Note(noteTitle, noteBody, noteId)) // Make sure the new values are saved
+                        navToDetail()
+                    } else {
+                        if (noteTitle.isBlank()) {
+                            titleError = "Title cannot be empty"
+                        }
+                        else if (noteTitle.length > 20) {
+                            titleError = "Title cannot be longer than 20 characters"
+                        }
+                        if (noteBody.length > 200) {
+                            bodyError = "Body cannot be longer than 200 characters"
+                        }
+                    }
                 },
                 "Cancel",
                 "Save"
