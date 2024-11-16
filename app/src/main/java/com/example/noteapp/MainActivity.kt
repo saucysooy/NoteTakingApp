@@ -68,22 +68,26 @@ class MainActivity : ComponentActivity() {
                         NoteDetails(navToOverview = { navController.popBackStack() },
                             navToEdit = { navController.navigate("edit/$noteId")},
                             noteId,
-                            notesViewmodel)
+                            notesViewmodel,
+                            windowSize)
                     }
 
                     composable (
                         route = "edit/{noteId}"
                     ) { backStackEntry ->
                         val noteId = backStackEntry.arguments?.getString("noteId")?.toIntOrNull() ?: -1
-                        EditScreen(noteId, notesViewmodel, navToDetail = {
+                        EditScreen(noteId, notesViewmodel,
+                            navToDetail = {
                             navController.popBackStack()
-                        })
+                        },
+                            windowSize
+                        )
                     }
 
                     composable(
                         route = "create"
                     ) {
-                        NewNoteScreen(notesViewmodel, navToOverview = { navController.popBackStack() })
+                        NewNoteScreen(notesViewmodel, navToOverview = { navController.popBackStack()}, windowSize)
                     }
                 }
             }
@@ -94,14 +98,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun PairOfButtons(firstAction: () -> Unit, secondAction: () -> Unit ,firstActionString: String, secondActionString: String, modifier: Modifier = Modifier) {
     Row (modifier = Modifier.fillMaxWidth()) {
-        Button (onClick =  firstAction , modifier = Modifier
-            .weight(1f)
-            .padding(horizontal = 16.dp)) {
+        Button (onClick =  firstAction , modifier.weight(1f)) {
             Text(text = firstActionString)
         }
-        Button (onClick =  secondAction , modifier = Modifier
-            .weight(1f)
-            .padding(horizontal = 16.dp)) {
+        Button (onClick =  secondAction , modifier.weight(1f)) {
             Text(text = secondActionString)
         }
     }
@@ -118,10 +118,11 @@ fun PairOfButtons(firstAction: () -> Unit, secondAction: () -> Unit ,firstAction
     name = "Dark Mode",
     showBackground = true,
 )
+/*
 @Composable
 fun NoteDetailsPreview() {
     NoteAppTheme {
-        NoteDetails({}, {},0, NotesViewModel())
+        NoteDetails({}, {},0, NotesViewModel(), calculateWindowSizeClass())
     }
 }
 
@@ -140,7 +141,7 @@ fun EditScreenPreview() {
         EditScreen(0, notesViewModel = NotesViewModel(), navToDetail = {})
     }
 }
-
+*/
 @Preview(
     name = "Light Mode",
     showBackground = true,
@@ -156,7 +157,7 @@ fun PairOfButtonsPreview() {
         PairOfButtons({},{},"Cancel", "Save")
     }
 }
-
+/*
 @Preview(
     name = "Light Mode",
     showBackground = true,
@@ -166,13 +167,14 @@ fun PairOfButtonsPreview() {
     name = "Dark Mode",
     showBackground = true,
 )
+
 @Composable
 fun CreateScreenPreview() {
     NoteAppTheme {
         NewNoteScreen(notesViewModel = NotesViewModel(), navToOverview = {})
     }
 }
-/*
+
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Preview(
     name = "Light Mode",
