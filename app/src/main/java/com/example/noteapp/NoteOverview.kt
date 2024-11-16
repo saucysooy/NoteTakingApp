@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -22,6 +25,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -71,8 +76,45 @@ fun NoteOverviewContent(notesViewModel: NotesViewModel, navToDetail: (Int) -> Un
 /* ====================================== */
 
 @Composable
-fun NoteOverview(notesViewModel: NotesViewModel, navToDetail: (Int) -> Unit, navToCreate: () -> Unit ,modifier: Modifier = Modifier) {
-    Surface() {
+fun NoteOverview(notesViewModel: NotesViewModel, navToDetail: (Int) -> Unit, navToCreate: () -> Unit, windowSize: WindowSizeClass, modifier: Modifier = Modifier) {
+    when (windowSize.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> {
+            CompactNoteOverview(notesViewModel, navToDetail, navToCreate)
+        }
+        WindowWidthSizeClass.Medium -> {
+            MediumNoteOverview(notesViewModel, navToDetail, navToCreate)
+        }
+        WindowWidthSizeClass.Expanded -> {
+            ExpandedNoteOverview(notesViewModel, navToDetail, navToCreate)
+        }
+    }
+}
+
+@Composable
+fun CompactNoteOverview(notesViewModel: NotesViewModel, navToDetail: (Int) -> Unit, navToCreate: () -> Unit, modifier: Modifier = Modifier) {
+    Box (modifier = Modifier.fillMaxSize()) {
+        Surface() {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+            ) {
+                Box(modifier = Modifier.weight(1f)) {
+                    NoteOverviewHeader(notesViewModel.getNotesSize())
+                }
+                Box(modifier = Modifier.weight(2f)) {
+                    NoteOverviewContent(notesViewModel, navToDetail)
+                }
+            }
+            CreateButton(onClick = { navToCreate() }, modifier = Modifier.align(Alignment.BottomEnd))
+        }
+    }
+}
+
+@Composable
+fun MediumNoteOverview(notesViewModel: NotesViewModel, navToDetail: (Int) -> Unit, navToCreate: () -> Unit, modifier: Modifier = Modifier) {
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
@@ -82,13 +124,41 @@ fun NoteOverview(notesViewModel: NotesViewModel, navToDetail: (Int) -> Unit, nav
             Box(modifier = Modifier.weight(1f)) {
                 NoteOverviewHeader(notesViewModel.getNotesSize())
             }
-            Box(modifier = Modifier.weight(2f)) {
-                NoteOverviewContent(notesViewModel, navToDetail)
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2), // making use of space by adjusting column count
+                modifier = Modifier.weight(2f)
+            ) {
+                items(notesViewModel.notes) { note ->
+                    NoteCard(note, navToDetail, modifier = Modifier.padding(8.dp))
+                }
             }
-            CreateButton(onClick = {navToCreate()})
         }
+        CreateButton(onClick = { navToCreate() }, modifier = Modifier.align(Alignment.BottomEnd))
     }
+}
 
+@Composable
+fun ExpandedNoteOverview(notesViewModel: NotesViewModel, navToDetail: (Int) -> Unit, navToCreate: () -> Unit, modifier: Modifier = Modifier) {
+    Box (modifier = Modifier.fillMaxSize()) {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+        ) {
+            Box(modifier = Modifier.weight(1f)) {
+                NoteOverviewHeader(notesViewModel.getNotesSize())
+            }
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(200.dp), // adjust column count dynamically
+                modifier = Modifier.weight(2f)
+            ) {
+                items(notesViewModel.notes) { note ->
+                    NoteCard(note, navToDetail, modifier = Modifier.padding(8.dp))
+                }
+            }
+        }
+        CreateButton(onClick = { navToCreate() }, modifier = Modifier.align(Alignment.BottomEnd))
+    }
 }
 
 /* ====================================== */
@@ -127,15 +197,12 @@ fun NoteCard (note: Note, navToDetail: (Int) -> Unit, modifier: Modifier = Modif
 }
 
 @Composable
-fun CreateButton(onClick: () -> Unit) {
-    Box (modifier = Modifier.fillMaxWidth()) {
-        FloatingActionButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp),
-            onClick = { onClick() },
-        ) {
-            Icon(Icons.Filled.Add, "Floating action button.")
-        }
+fun CreateButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    FloatingActionButton(
+        modifier = modifier
+            .padding(16.dp),
+        onClick = { onClick() },
+    ) {
+        Icon(Icons.Filled.Add, "Floating action button.")
     }
 }

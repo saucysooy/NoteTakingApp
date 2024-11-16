@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,10 +20,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.noteapp.ui.theme.NoteAppTheme
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+
 
 data class Note (var noteTitle: String, var noteBody: String, val noteId: Int)
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -32,10 +35,15 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             // Sample data
-            notesViewmodel.addNote("Note 1", "This is the first note.")
-            notesViewmodel.addNote("Note 2", "This is the second note.")
-            notesViewmodel.addNote("Note 3", "This is the third note.")
+            // Since this activity gets recreated when screen is rotated, Added condition to prevent the notes getting recreated for testing purposes
+            if (notesViewmodel.getNotesSize() == 0) {
+                notesViewmodel.addNote("Note 1", "This is the first note.")
+                notesViewmodel.addNote("Note 2", "This is the second note.")
+                notesViewmodel.addNote("Note 3", "This is the third note.")
+
+            }
             NoteAppTheme {
+                val windowSize = calculateWindowSizeClass(this)
                 val navController = rememberNavController()
                 // Setting up start screen with navigation
                 NavHost(navController = navController, startDestination = "overview") {
@@ -45,10 +53,11 @@ class MainActivity : ComponentActivity() {
                         NoteOverview(notesViewmodel ,
                             navToDetail = { noteId -> // Takes an Int parameter and passes it to the lambda to then define the unique route
                             navController.navigate("details/$noteId")
-                        },
+                            },
                             navToCreate = {
                                 navController.navigate("create")
-                            }
+                            },
+                            windowSize
                         )
                     }
                     // Setting up detail screen for unique routes with navigation
@@ -163,7 +172,8 @@ fun CreateScreenPreview() {
         NewNoteScreen(notesViewModel = NotesViewModel(), navToOverview = {})
     }
 }
-
+/*
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Preview(
     name = "Light Mode",
     showBackground = true,
@@ -177,7 +187,9 @@ fun CreateScreenPreview() {
 fun NoteOverviewPreview() {
     NoteAppTheme {
         Surface {
-            NoteOverview(NotesViewModel(), navToDetail = {}, navToCreate = {})
+            NoteOverview(NotesViewModel(), {}, {}, calculateWindowSizeClass())
         }
     }
 }
+
+ */
