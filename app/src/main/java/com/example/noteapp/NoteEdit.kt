@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -119,6 +120,7 @@ fun MediumEditScreen(
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
                     .padding(paddingValues)
+                    .width(200.dp)
             )
             if (titleError.value != "") {
                 Text(text = titleError.value, color = Color.Red)
@@ -195,7 +197,7 @@ fun ExpandedEditScreen(
             TopAppBar(
                 title = {
                     Box(modifier = Modifier.fillMaxWidth(0.95f)) {
-                        Text(text = "Editing Note", modifier = Modifier.align(Alignment.Center), textAlign = TextAlign.Center,fontWeight = FontWeight(800))
+                        Text(text = "Editing Note", modifier = Modifier.align(Alignment.Center),fontWeight = FontWeight(800))
                     }
                 },
 
@@ -214,6 +216,7 @@ fun ExpandedEditScreen(
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
                     .padding(paddingValues)
+                    .width(200.dp)
             )
             if (titleError.value != "") {
                 Text(text = titleError.value, color = Color.Red)
@@ -279,8 +282,8 @@ fun CompactEditScreen(
     notesViewModel: NotesViewModel,
     noteTitle: MutableState<String>,
     noteBody: MutableState<String>,
-    titleError: MutableState<String?>,
-    bodyError: MutableState<String?>,
+    titleError: MutableState<String>,
+    bodyError: MutableState<String>,
     originalNoteTitle: String,
     originalNoteBody: String,
     navToDetail: () -> Unit) {
@@ -308,10 +311,10 @@ fun CompactEditScreen(
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
                     .padding(paddingValues)
+                    .width(200.dp)
             )
             if (titleError.value != "") {
-                Text(text = titleError.value!!, color = Color.Red) // title will never be null here
-                                                                   // which is why the !! is used since it tells the compiler it will never be null
+                Text(text = titleError.value, color = Color.Red)
             }
 
 
@@ -329,8 +332,7 @@ fun CompactEditScreen(
                 placeholder = { Text(text = "Type your note here...") }
             )
             if (bodyError.value != "") {
-                Text(text = bodyError.value!! , color = Color.Red) // body will never be null here
-                                                                   // which is why the !! is used since it tells the compiler it will never be null
+                Text(text = bodyError.value , color = Color.Red)
             }
             Spacer(modifier = Modifier.height(32.dp))
             PairOfButtons(

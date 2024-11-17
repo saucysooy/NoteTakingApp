@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -53,8 +54,7 @@ fun CompactNoteDetails ( navToOverview: () -> Unit, navToEdit: () -> Unit, note:
             TopAppBar(
                 title = {
                     Box(modifier = Modifier.fillMaxWidth(0.95f)) {
-                        Text(text = "Note Details", modifier = Modifier.align(Alignment.Center),
-                            textAlign = TextAlign.Center,fontWeight = FontWeight(800)
+                        Text(text = "Note Details", modifier = Modifier.align(Alignment.Center), fontWeight = FontWeight(800)
                         )
                     }
                 },
@@ -97,8 +97,6 @@ fun MediumNoteDetails(
                     Box(modifier = Modifier.fillMaxWidth(0.9f)) {
                         Text(
                             text = "Note Details",
-                            modifier = Modifier.align(Alignment.Center),
-                            textAlign = TextAlign.Center,
                             fontWeight = FontWeight(800)
                         )
                     }
@@ -147,8 +145,6 @@ fun ExpandedNoteDetails(
                     Box(modifier = Modifier.fillMaxWidth(0.9f)) {
                         Text(
                             text = "Note Details",
-                            modifier = Modifier.align(Alignment.Center),
-                            textAlign = TextAlign.Center,
                             fontWeight = FontWeight(800)
                         )
                     }
@@ -159,28 +155,30 @@ fun ExpandedNoteDetails(
         Row(
             modifier = Modifier
                 .padding(paddingValues)
-                .fillMaxSize()
+                .fillMaxWidth()
+                .fillMaxHeight(0.85f)
                 .padding(16.dp)
         ) {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(end = 16.dp)
+                    .padding(end = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(text = note?.noteTitle ?: "", fontWeight = FontWeight(800), fontSize = 24.sp)
                 Spacer(modifier = Modifier.height(20.dp))
+                Text(text = note?.noteBody ?: "", fontSize = 18.sp, textAlign = TextAlign.Center)
+            }
+            Column(
+                modifier = Modifier.weight(1f).fillMaxWidth().align(Alignment.CenterVertically)
+            ) {
                 PairOfButtons(
                     firstAction = navToOverview,
                     secondAction = navToEdit,
                     firstActionString = "Cancel",
                     secondActionString = "Edit",
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(horizontal = 48.dp)
                 )
-            }
-            Column(
-                modifier = Modifier.weight(2f)
-            ) {
-                Text(text = note?.noteBody ?: "", fontSize = 18.sp)
             }
         }
     }

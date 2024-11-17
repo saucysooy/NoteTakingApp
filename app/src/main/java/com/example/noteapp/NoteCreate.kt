@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -110,7 +111,8 @@ fun ExpandedNewNoteScreen(
                 noteTitle.value = it
                 titleError.value = ""
             },
-            placeholder = { Text(text = "Enter Title...") }
+            placeholder = { Text(text = "Enter Title...") },
+            modifier = Modifier.width(300.dp)
         )
 
         if (titleError.value.isNotEmpty()) {
@@ -192,7 +194,8 @@ fun MediumNewNoteScreen(
                 noteTitle.value = it
                 titleError.value = ""
             },
-            placeholder = { Text(text = "Enter Title...") }
+            modifier = Modifier.width(300.dp),
+            placeholder = { Text(text = "Enter Title...") },
         )
 
         if (titleError.value.isNotEmpty()) {
@@ -265,6 +268,7 @@ fun CompactNewNoteScreen(
                 noteTitle.value = it
                 titleError.value = ""
             },
+            modifier = Modifier.width(300.dp),
             placeholder = { Text(text = "Enter Title...") }
         )
 
