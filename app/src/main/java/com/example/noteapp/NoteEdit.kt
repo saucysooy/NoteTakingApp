@@ -78,7 +78,16 @@ fun EditScreen(noteId: Int, notesViewModel: NotesViewModel, navToDetail: () -> U
                 navToDetail)
         }
         else -> {
-
+            CompactEditScreen(
+                noteId,
+                notesViewModel,
+                noteTitle,
+                noteBody,
+                remember { mutableStateOf(titleError) },
+                remember { mutableStateOf(bodyError) },
+                originalNoteTitle,
+                originalNoteBody,
+                navToDetail)
         }
     }
 }

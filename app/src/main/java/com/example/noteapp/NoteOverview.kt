@@ -87,6 +87,9 @@ fun NoteOverview(notesViewModel: NotesViewModel, navToDetail: (Int) -> Unit, nav
         WindowWidthSizeClass.Expanded -> {
             ExpandedNoteOverview(notesViewModel, navToDetail, navToCreate)
         }
+        else -> {
+            CompactNoteOverview(notesViewModel, navToDetail, navToCreate)
+        }
     }
 }
 
