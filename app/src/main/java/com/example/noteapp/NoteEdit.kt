@@ -17,10 +17,8 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,8 +35,8 @@ fun EditScreen(noteId: Int, notesViewModel: NotesViewModel, navToDetail: () -> U
     val originalNoteTitle = note?.noteTitle ?: ""
     val originalNoteBody = note?.noteBody ?: ""
 
-    var titleError by remember { mutableStateOf("") }
-    var bodyError by remember { mutableStateOf("") }
+    var titleError = remember { mutableStateOf("") }
+    var bodyError = remember { mutableStateOf("") }
 
     when (windowSize.widthSizeClass) {
         WindowWidthSizeClass.Compact -> {
@@ -47,8 +45,8 @@ fun EditScreen(noteId: Int, notesViewModel: NotesViewModel, navToDetail: () -> U
                 notesViewModel,
                 noteTitle,
                 noteBody,
-                remember { mutableStateOf(titleError) },
-                remember { mutableStateOf(bodyError) },
+                titleError,
+                bodyError,
                 originalNoteTitle,
                 originalNoteBody,
                 navToDetail)
@@ -59,8 +57,8 @@ fun EditScreen(noteId: Int, notesViewModel: NotesViewModel, navToDetail: () -> U
                 notesViewModel,
                 noteTitle,
                 noteBody,
-                remember { mutableStateOf(titleError) },
-                remember { mutableStateOf(bodyError) },
+                titleError,
+                bodyError,
                 originalNoteTitle,
                 originalNoteBody,
                 navToDetail)
@@ -71,8 +69,8 @@ fun EditScreen(noteId: Int, notesViewModel: NotesViewModel, navToDetail: () -> U
                 notesViewModel,
                 noteTitle,
                 noteBody,
-                remember { mutableStateOf(titleError) },
-                remember { mutableStateOf(bodyError) },
+                titleError,
+                bodyError,
                 originalNoteTitle,
                 originalNoteBody,
                 navToDetail)
@@ -83,8 +81,8 @@ fun EditScreen(noteId: Int, notesViewModel: NotesViewModel, navToDetail: () -> U
                 notesViewModel,
                 noteTitle,
                 noteBody,
-                remember { mutableStateOf(titleError) },
-                remember { mutableStateOf(bodyError) },
+                titleError,
+                bodyError,
                 originalNoteTitle,
                 originalNoteBody,
                 navToDetail)
